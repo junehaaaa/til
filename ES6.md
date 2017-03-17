@@ -1,4 +1,4 @@
-# ECMAScript 2015(ES6)
+# ECMAScript 2015(ES6) - part 1
 
 ## let/const VS. var
 * let과 const는 block scope를 가진다. (내부에 지역을 만든다.)
@@ -22,7 +22,7 @@ console.log(b); // Reference Error
 
 ## Array Additions  
 
-* array.find()     
+* array.find()
 * array.includes() 
 * array.fill()     
 * array.keys()
@@ -179,6 +179,14 @@ var lecture = ['study css', 'study es6'];
 process(...lecture);
 ```
 
+```javascript
+let a1 = [3, 5, 8], a2 = [55, 88];
+// 기존 방식
+// a1.splice(2, 0, a2[0], a2[88];)
+// spread 방식으로 인자를 전달하면 배열 데이터의 원소를 각각 풀어서 전달한다.
+a1.splice(2, 0, ...a2); // a1 = [3, 5, 55, 88, 8]
+```
+
 ## Object Enhancements
 
 ```javascript
@@ -199,7 +207,21 @@ let getPerson = ()=> {
 // console.log( getPerson().greeting('Hey Min') );
 ```
 
-## Class & Inheritance
+```javascript
+let age = 10, name = "열", job = "열열";
+
+let json_data = {
+  name, age, job,
+  getName() {},
+  setAge() {},
+  jobChange() {}
+}
+```
+
+
+## Class(클래스) & Inheritance(상속)
+
+### Class(클래스)
 
 * class
 * constructor
@@ -236,10 +258,166 @@ class User {
 }
 ```
 
+### 상속(Inheritance)
+```javascript
+class Animal {
+    constructor(legs = 4, wings = 0) {
+        this.legs = legs;
+        this.wings = wings;
+    }
+    eat() {}
+    sleep() {}
+    run() {}
+}
+
+class Duck extends Animal {
+    constructor(type) {
+        super(2, 2); // this를 가르킨다.
+        this.type = type;
+    }
+    fly() {}
+}
+
+// class Dog extends Animal {}
+// class Elephant extends Animal {}
+```
+
+### ES5 -> ES6
+```javascript
+
+class User {
+    constructor(name, email) {
+        this.name = name;
+        this.email = email;
+    }
+    static register(name, email) {
+        return new User(name, email);
+    }
+    changeEmail(new_mail) { 
+        this.email = new_mail;
+    }
+}
+
+let user_list = [];
+user_list.push( User.register('a', 'a@acon.com') );
+user_list.push( User.register('v', 'v@acon.com') );
+user_list.push( User.register('j', 'j@acon.com') );
+
+// ES5
+user_list.find( function(user) {
+  return user.email === 'dondong@a.mail';
+});
+// ES6, Step 1
+user_list.find(user)=>{ return user.email === 'dondong@a.mail'; };
+// ES6, Step 2
+user_list.find(user=>user.email === 'dondong@a.mail'); // return value
+user_list.findIndex(user=>user.isAdmin); // return index
+
+// filter
+var user_not_admin = user_list.filter(user=>!user.idAdmin);
+
+// Array.find() -> 하나의 인자를 반환 
+// [Reference - https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Array/find]
+
+// Array.filter() -> 배열로 인자를 반환 
+// [Reference - https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Array/filter]
+
+```
+
 * get (getter)
 * set (setter)
 * extends
 * super
 * new WeakMap()
 
+## Getter, Setter 함수
+```javascript
+class Employee {
 
+    constructor(name) {
+        this._name = name;
+    }
+
+    get name() {
+      if(this._name) {
+        return this._name.toUpperCase() + ' 양';
+      } else {
+        return undefined;
+      }
+    }
+
+    set name(newName) {
+      if (newName == this._name) {
+        console.log('이미 같은 이름을 쓰고 있습니다.');
+      } else if (newName) {
+        this._name = newName;
+      } else {
+        return false;
+      }
+    }
+}
+
+var emp = new Employee("솔지");
+
+// 내부적으로 get 메소드를 활용
+if (emp.name) {
+  console.log(emp.name);  // 솔지 양
+}
+
+// 내부적으로 setter를 활용
+emp.name = "EXID 솔지";
+console.log(emp.name);  // EXID 솔지 양
+
+```
+
+## new WeakMap()
+
+```javascript
+let _nickname = new WeakMap();
+
+class Duck extends Animal {
+  constructor(type) {
+    super(2, 2);
+    // Public
+    this.type = type;
+    // WeakMap 사용하여 비공개 멤버 등록
+    _nickname.set(this, null);
+  }
+  // getter
+  get nickname() {
+    return _nickname.get(this) || undefined;
+  }
+  // setter
+  set nickname(new_name) {
+    if ( new_name === _nickname.get(this) ) {
+      console.info('이미 별명이 같습니다.');
+    } else if (new_name) {
+      _nickname.set(this, new_name);
+    }
+  }
+  fly() {}
+}
+
+let gold_duck = new Duck('황금 알을 낳는 오리');
+
+gold_duck.nickname; // undefined
+gold_duck.nickname = '황금 둥이';
+```
+
+## Destructuring(파괴)
+```javascript
+// < e.g) 1: 블록 스코프 내에서 디스트럭쳐링 활용 >
+let product = {
+  name           : 'TV',
+  maker          : 'LG',
+  features       : [ 'Time Recoding', 'Sharing Screen', 'Speech Recognition' ],
+  productionYear : 2017
+};
+
+{
+  let name           = product.name;
+  let maker          = product.maker;
+  let features       = product.features;
+  let productionYear = product.productionYear;
+}
+```
