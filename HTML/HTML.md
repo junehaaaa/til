@@ -32,14 +32,14 @@
 * head에서는 meta 태그가 가장먼저 선언되어야한다.<br>
 
 ```html
-<!DOCTYPE html> // DTD가 웹표준을 참고한다.
-<html lang="ko"> // 이 html의 문서는 한국어로 되어있다.
+<!DOCTYPE html> <!-- DTD가 웹표준을 참고한다. -->
+<html lang="ko"> <!-- 이 html의 문서는 한국어로 되어있다. -->
 <head>
-  <meta charset="UTF-8"> // 8비트로 표현되는 모든 언어를 표현한다.
-  <title>Document</title> // 타이틀의 콘텐츠는 SEO 관점에서 굉장히 중요하다.
-  <link rel="stylesheet" href=""> // CSS를 링크한다.
-</head> // 브라우저상에는 표현되지 않지만 html의 중요한 정보들을 담고 있다.
-<body> // 브라우저상에 시각적으로 표현되는 부분
+  <meta charset="UTF-8"> <!-- 8비트로 표현되는 모든 언어를 표현한다. -->
+  <title>Document</title> <!-- 타이틀의 콘텐츠는 SEO 관점에서 굉장히 중요하다. -->
+  <link rel="stylesheet" href=""> <!-- CSS를 링크한다. -->
+</head> <!-- 브라우저상에는 표현되지 않지만 html의 중요한 정보들을 담고 있다. -->
+<body> <!-- 브라우저상에 시각적으로 표현되는 부분 -->
 
 </body>
 </html>

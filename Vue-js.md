@@ -1,12 +1,5 @@
 # VUE JS FRAMEWORK
 
-## 주요특징
-* 낮은 학습비용 (비교적 쉽게 느껴지는 API, HTML 기반 템플릿 문법지원)
-* 고속 렌더링 속도 (React 보다 빠르다고 주장함)
-* 초경량 프레임워크 
-* 컴포넌트 지향 UI (페이지 단위가 아닌, 컴포넌트별 개발)
-* 리엑티브 시스템 
-* 데이터 바인딩
 
 ## 브라우저 지원 범위
 * IE9+
@@ -39,24 +32,26 @@
 </body>
 ```
 
-### 2. Component Communication
-* Props in, Events out
-* 명시적으로 선언해주지 않는 이상, 자식은 부모의 능력을 상속받지 않는다.
+## 2. 템플릿 문법
 
-### 3. Client-Side Routing / Vue Router
-### 4. VueX
-### 5. Single File Vue Components
-* .vue 파일 하나에 HTML, CSS, JS 파일이 모두 들어있다. 컴포넌트 별로 .vue 파일을 관리하기 때문에 유지, 보수가 편하다.
-* 하나의 문서 내에서 lang속성을 사용하면 다양한 형태의 언어 및 컴파일러를 모두 사용할수 있다.
-* 스타일 영역(Scope)을 지정하여 사용할수 있다.
+### 2-1. 보간법(Interpolation)
+#### 문자열
+* 데이터 바인딩의 가장 기본 형태는 “Mustache” 구문(이중 중괄호)을 사용한 텍스트 보간입니다.
 
-### 6. Virtual DOM
-* Render Functions 
+```html
+<span>메시지: {{ msg }}</span>
+```
 
+* Mustache 태그는 해당 데이터 객체의 msg 속성 값으로 대체됩니다. 또한 데이터 객체의 msg 속성이 변경될 때 마다 갱신됩니다.
+* `v-once` 디렉티브을 사용하여 데이터 변경 시 업데이트 되지 않는 일회성 보간을 수행할 수 있지만, 같은 노드의 바인딩에도 영향을 미친다는 점을 유의해야 합니다.
 
-## Directives
+```html
+<span v-once>다시는 변경하지 않습니다: {{ msg }}</span>
+```
 
-### v-text
+### 2-2. 디렉티브(Directives)
+
+* `v-text`
 ```html
 <!-- v-text와 mustache 태그의 차이점 -->
 <body>
@@ -77,10 +72,9 @@
 </body>
 ```
 
-### v-html
-### v-show
-
-### v-if, v-else, v-else-if
+* `v-html`
+* `v-show`
+* `v-if`, `v-else`, `v-else-if`
 ```html
 <div v-if="type === 'A'">
   A
@@ -102,10 +96,76 @@ v-if / 마크업에서 삭제
 v-show / display 스타일을 none으로 처리
 ```
 
-### v-for
-### v-on
-### v-bind
-### v-model
-### v-pre
-### v-cloak
-### v-once
+* `v-for`
+```html
+<ul class="reset-list vue-features">
+    <!-- 배열 테디어 순환 처리: feature(객체) -->
+    <li v-for="(feature, index) of vue_features">
+        <div v-for="value, key, index of feature">
+            ({{ index }}) {{ key }}; {{ value }}
+        </div>
+        <hr v-if="index !== vue-features.length - 1">
+    </li>
+</ul>
+```
+* `v-bind`
+* `v-model`
+* `v-pre`
+* `v-cloak`
+* `v-once`
+
+### 약어
+* `v-on`
+* `v-bind`
+
+## 3. List Rendering (리스트 렌더링)
+
+* `Vue.set( target, key, value )`
+* `Vue.delete( target, key )`
+
+## 4. Life Cycle(Event Hook)
+
+## 5. Event Listener (이벤트 처리기)
+
+* `v-on`
+* `v-on:click.prevent`, `v-on:mouseover`
+
+## 6. 계산된 속성과 감시자
+
+### 계산된 속성 - Computed(getter, setter) 
+* method와 computed 차이는 뭘까?
+* computed은 함수가 아니다.
+* method는 상태가 바뀔때마다 실행된다.(기존에 의존되있는 설정값을 바꾸지 않더라도.)
+* computed은 상태가 변경이되어도 바뀌지 않는다.(기존에 의존되있는 설정값이 수정되지 않는 이상은.)
+
+### 감시자 - watch
+* 서버에서 응답이 올때까지 기다릴때.
+* 마냥 기다리는 것은 비용낭비이니, 그럴땐 계산된 속성을 사용하자.
+
+
+1. new Vue 인스턴스를 생성
+2. Static 메서드 생성 (Vue.set, Vue.delete 등)
+3. Life Cycle
+4. Method를 등록할수 있다.
+모든 속성에는 v-bind를 붙일수 있다. 동적처리를 위해서는 v-bind가 필요하다.
+
+## 7. Component
+* 기본 HTML 엘리먼트를 확장하여 재사용 가능한 코드를 캡슐화하는데
+도움이 된다.
+
+### Component 사용하기
+```javascript
+// 전역 컴포넌트 등록하기
+Vue.component('tag-name', {
+    // 옵션
+    });
+
+var app = new Vue({
+    el: '#app',
+    // 지역 컴포넌트 등록하기
+    component: {
+
+    }
+});
+```
+
