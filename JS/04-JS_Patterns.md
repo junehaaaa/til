@@ -1,148 +1,4 @@
-## 1. Review
-
-#### 1.1 Javascript 함수는 일급객체
-
-> #### Javascript 함수는 일반 함수로서 때론 생성자 함수, 함수의 인자, 함수의 반환 값, 객체의 멤버, 배열의 원소로서 다양하게 사용된다.
-
-##### 일급객체(First-Class Object)의 특징
-- 변수, 데이터 구조 안에 담을 수 있다.
-- 인자(Parameter, Argument)로 전달할 수 있다.
-- 반환 값(Return Value)으로 사용할 수 있다.
-- 런타임(실행) 중에 생성할 수 있다.
-- 할당에 사용된 이름과 관계 없이 고유하게 식별할 수 있다.
-
-```javascript
-// 변수에 함수를 할당할 수 있다.
-var fn = function () { ... };
-
-fn();
-
-// 함수의 인자로 함수가 전달될 수 있다.
-function fn(callback) {
-    callback();
-}
-
-fn( function() { ... } );
-
-// 함수의 반환 값으로 함수를 내보낼 수 있다. (객체도 가능)
-function fn() {
-    return function() { ... };
-}
-
-fn()();
-
-// 객체의 속성으로 함수를 설정할 수 있다. (메소드)
-var obj = {
-    "fn": function() { ... }
-};
-
-obj.fn();
-
-// 배열의 원소(Item)로 함수를 메모리할 수 있다.
-var arr = [];
-arr[0] = function() {...};
-
-arr[0]();
-```
-
-##### 생성자 함수
-
-```javascript
-function Person() {} // 생성자 함수
-var jiwoo = new Person(); // 생성된 객체
-var heechan = new Person(); // 생성된 객체
-```
-
-##### callback 함수
-
-- callback 함수는 보통 동기(async) 처리에 사용한다.
-- 특정 이벤트 종료 시점에 callback 함수를 통해 이벤트를 실행할 수 있다.
-
-```javascript
-function(el, callback) {
-  // some codes...
-  // 해당 함수가 결과값을 리턴하기 바로 전에 callback 함수를 호출한다.
-  // 예 : 특정 이벤트가 종료되는 시점에 이벤트를 실행 할 수 있다.
-  if(callback && typeof callback === 'function') {
-    callback();
-  }
-  return el;
-}
-```
-
-###### callback 함수의 jQuery 사용 예시
-
-```javascript
-$('.off-canvas-menu-button').on('click', function(){
-  $(this).parent().animate({
-    'transform' : 'translateX(100px)'
-  }, 400, 'ease-out-back', function() {
-    console.log('finished animation.');
-  })
-});
-// function() {
-//    console.log('finished animation.');
-// 이 부분은 모든 애니메이션이 끝나면 실행되는 callback 함수이다.
-```
-
-### 1.2 JavaScript는 객체 지향 언어
-
-###### prototype 객체(빈 객체)
-
-> 사용자가 생성한 모든 함수는 prototype 속성(프로퍼티)을 가지는데 이는 프로토타입은 객체(빈 객체)를 참조한다. 프로토타입 객체에 멤버를 추가하면 상속을 통해 생성자를 통해 생성된 객체(인스턴스)는 이를 물려받아 사용가능하다.
-
-#### 1.2.1 Javascript 객체의 종류
-* 네이티브 객체 - String, Array, Function ...
-* 호스트(브라우저) 객체 - window, screen, document, location, history
-* 사용자 정의 객체 - 사용자가 직접 만드는 객체 (사용자가 객체단위로 컴포넌트를 개발할수 있다.)
-
-**사용자가 생성한 모든 함수는 `prototype 속성(프로퍼티)`을 가지는데** 이는 프로토타입은 객체(빈 객체)를 참조한다. 프로토타입 객체에 멤버를 추가하면 상속을 통해 생성자를 통해 생성된 객체(인스턴스)는 이를 물려받아 사용가능하다.
-
-![](https://github.com/yamoo9/FDS/raw/3rd_FDS/REFERENCES/JavaScript/02%20Advanced/images/OOJS.jpg);
-
-Class는 분류에 대한 개념이지 실체가 아니다. 반면, 객체는 실체이다.
-과일이라는 분류는 Class이며, 사과는 과일의 실체인 객체이다. 생성자 함수는 객체 생성 시 호출되어 객체의 초기화를 담당한다.
-
-```javascript
-function Fruit() {
-  // 과일이라는 Class
-}
-
-var apple = new Fruit();
-// new Fruit(); 이라는 생성자 함수를 이용해서 Fruit의 특징을 가진 apple 이라는 객체 생성
-
-Fruit.prototype
-// Class의 prototype 프로퍼티에 멤버를 추가하면 해당 Class에 의해 생성된 객체는 해당 멤버를 공통적으로 갖게 된다.
-```
-
-Class와 객체를 구분하는 간편한 방법 중 하나는 해당 Class나 객체를 대상으로 질문을 해보는 것이다. 생물인 경우 '나이가 어떻게 되는지', 무생물의 경우 '제조일자가 어떻게 되는지' 질문해보는 것이다. 사람의 나이는 정의할 수 없다. 그러므로 Class이다. 반면 옆집 철수의 나이는 정의할 수 있다. 그러므로 객체이다. 과일의 경우 생산일이 없지만, 사과는 생산일이 있다.
-
-객체는 유일무이하게 존재하는 실체이기 때문에 속성에 값을 가지고 있고,
-클래스는 개념이면서 분류 체계일 뿐이므로 속성에 값을 가질 수 없다.
-
-- 미키마우스의 꼬리는? 1개
-- 제리의 꼬리는? 1개
-- 쥐의 꼬리는? 1개
-
-쥐는 클래스인데 꼬리의 개수에 답을 가지고 있다.
-메모리 상의 모든 쥐의 객체가 같은 꼬리 개수를 갖는데, 이를 따로 정의할 필요가 있을까?
-같은 클래스의 모든 객체가 같은 값을 가지고 있다면 그 값은 클래스에 저장하면 어떨까? 이 경우 prototype에 해당 속성을 정의하면 된다. 즉, 추상화된 Class에 이미 정해진 프로퍼티나 메서드는 prototype을 사용해 정의하면 된다.
-
-```javascript
-쥐.prototype.꼬리개수 = 1;
-쥐.prototype.울다 = function () { return "찍찍"; };
-
-var 제리 = new 쥐();
-var 미키 = new 쥐();
-제리.꼬리개수; // 1
-미키.꼬리개수; // 1
-제리.울다(); // 찍찍
-미키.울다(); // 찍찍
-```
-
----
-
-## 2. 패턴(Patterns)
+# 패턴(Patterns)
 
 > 넓은 의미의 패턴은 "반복되는 사건이나 객체의 주제로 물건을 만드는 데 사용할 수 있는 틀이나 모형이 될 수 있는 것"을 말한다. 소프트웨어 개발에서는 일반적인 문제를 해결하는 해결책을 가리킨다. 바로 복사해서 붙여넣을 수 있는 코드를 말하는 것이 아니라, 모범적인 관행, 쓰임새에 맞게 추상화된 원리, 어떤 범주의 문제 해결을 위한 템플릿에 가깝다.
 
@@ -163,7 +19,7 @@ var 미키 = new 쥐();
 > - eval() 함수 사용 금지! : 보안 issue
 > - parseInt() 숫자 변환 시, 기수 설정 : `parseInt("123", 10)`
 
-#### 2.1 유지보수 가능한 코드 작성
+#### 유지보수 가능한 코드 작성
 
 > #### 일관된 코딩 규칙 준수를 통해 유지보수 가능한 코드를 작성해야 한다.
 
@@ -173,14 +29,14 @@ var 미키 = new 쥐();
 - 한 사람이 작성한 것처럼 보인다.
 - 문서화되어 있다. : jsdoc
 
-#### 2.2 전역 변수 사용 최소화
+#### 전역 변수 사용 최소화
 
 > #### 전역 변수 사용을 최소화한다는 것은 전역을 오염시키지 않는 것을 말한다. 최대한 전역과 구분되는 영역(Scope)에서 코드를 작성하는 습관을 들일 필요가 있다.
 
 - 네임스페이스(Namespace) 패턴 : 조금 번잡; YUI(Yahoo User Interface) 패턴
 - **IIFE(Immediately-Invoced Function Expression) 활용 : 모듈 패턴**
 
-##### 2.2.1 Namespace 패턴 : 객체에 종속시켜 범위를 정해주는 패턴(비추)
+##### Namespace 패턴 : 객체에 종속시켜 범위를 정해주는 패턴(비추)
 
 ```javascript
 //전역 함수
@@ -208,7 +64,7 @@ Object.freeze(YUI); // delete 불가능. 동결상태
 delete YUI.checkType // false
 ```
 
-##### 2.2.2 IIFE 패턴(모듈 [노출] 패턴) : 클로저 활용
+##### IIFE 패턴(모듈 [노출] 패턴) : 클로저 활용
 
 ```javascript
 var moduleMaker = function () {
@@ -277,14 +133,14 @@ dom.checkType(); // 접근 불가 - Private
 
 > +구글에서 IIFE 검색해서 공부해보기
 
-#### 2.2 전역 변수의 문제점
+#### 전역 변수의 문제점
 
 Javascript 애플리케이션, 웹 사이트 내 모든 코드 사이에서 공유되는 문제. 애플리케이션 내 다른 영역에서 목적이 다른 동일한 이름의 전역 변수가 존재할 경우 코드 충돌. 외부 코드를 가져와 삽입할 경우에도 문제 발생 가능. 고로 스크립트 간 충돌을 방지하기 위함으로 전역 변수 사용을 최소한 줄여야 함.
 
 - 서드파티 Javascript 라이브러리
 - 광고 제휴 업체 스크립트
 
-#### 2.3 var 선언은 필수
+#### var 선언은 필수
 
 암묵적 전역의 또 다른 안 좋은 패턴은 var 선언에 연쇄적 할당을 적용하는 경우.
 
@@ -445,7 +301,7 @@ target_link.onclick = function (e) {
 };
 ```
 
-#### 2.4 eval 함수 사용 금지
+#### eval 함수 사용 금지
 
 `eval()` 함수는 일련의 문자열을 받아 코드를 실행시킨다. 이는 보안 상에 문제를 야기하므로 사용하지 않는 것이 좋다. 누군가 악의적으로 전달한 문자열을 실행시킬 수도 있기 때문이다.
 
@@ -484,41 +340,7 @@ setInterval('book.selling()', 2200);
 setInterval(book.selling, 2200);
 ```
 
----
-
-## 3. 생성자와 리터럴
-
-#### 사용자 정의 생성자 함수(User Define Constructor Function)
-
-앞서 공부한 객체 리터럴 패턴이나 객체 내장 생성자 함수를 사용하지 않고, 사용자가 정의한 생성자 함수로 객체를 생성할 수도 있다. 이 방법은 JAVA에서 Class를 사용하여 객체를 생성하는 방법과 매우 유사하다. 하지만 이는 Class가 아닌, Javascript 함수일 뿐이다.
-
-```javascript
-var MugCup = function(content) {
-    this.content = content;
-    this.count   = 1;
-    this.broken  = false;
-    this.drink   = function(amount) {
-        return this.content + '를 ' + amount + '만큼 마시다.';
-    };
-};
-```
-
-```javascript
-var header_slider = new Carousel('.header-slider');
-var main_slider = new Carousel('.main_slider');
-var footer_slider = new Carousel('.footer_slider');
-```
-
-> **[niawa/ARIA github.com](https://github.com/niawa/ARIA/blob/master/21.%20combobox/jQuery%20plugin%20source/jquery.combobox.js)** | 객체지향 코드 살펴보기
-
-
-#### new를 사용해야 하는 이유
-
-생성자란? new 키워드와 함께 호출될 뿐 일반 함수에 불과하다. 하지만 new를 빼먹으면 문법 오류나 런타임 에러가 발생하지는 않지만, 논리적인 오류가 생겨 의도치 않은 결과가 발생할 수도 있다. 이유는 **new를 빼먹고 생성자 함수를 호출할 경우 this가 전역(Global) 객체를 가리키기 때문**이다. (웹 브라우저 환경에서 this는 window 객체를 가리킨다) 이는 전역을 오염시키는 행위가 되기 때문에 피해야 할 상황이다.
-
----
-
-## 4. 정리
+## 정리
 
 ### 모듈 별로 개발하는 것이 좋다. 그렇기 위해서 필요한 개념들.
 * 클로저 개념 - 함수나 객체는 자기 상위 영역에 접근할수 있다.
