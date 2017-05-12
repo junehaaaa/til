@@ -33,6 +33,19 @@ class App extends React.Component {
 
 > JSX에서 보이는 div, a 등과 같은 HTML 태그는 사실 HTML 태그가 아니라 모두 React.js의 컴포넌트다. 기본 HTML 태그를 React.js에서 미리 컴포넌트로 작성해 제공할 뿐이다. JSX로 작성되는 모든 요소는 React.js 컴포넌트로 보면 된다.
 
+## React.js의 구조
+```
+project
+├── package.json         
+├── public            # 서버 public path
+│   └── index.html    # 메인 페이지
+├── src               # React.js 프로젝트 루트
+│   ├── components    # 컴포넌트 폴더
+│   │   └── App.js    # App 컴포넌트
+│   └── index.js      # Webpack Entry point
+└── webpack.config.js # Webpack 설정파일
+```
+
 ## React.js의 컴포넌트
 
 React.js에서는 기본적으로 컴포넌트를 만들고 조합하여 애플리케이션을 만든다.
@@ -62,53 +75,79 @@ render() {
 }
 ```
 
-### 컴포넌트 간의 상호작용
+### Props - 컴포넌트 간의 상호작용
 
-* `<Hello name="foo"/>` 처럼 작성하면, `this.props.name` 으로 참조할 수 있다.
+  * 컴포넌트 내부에 Immutable Data를 설정할때 사용
+  * render() 메소드 내부 안에 { this.props.propsName } 형식으로 사용
+  * 컴포넌트를 사용 할 때, < > 괄호 안에 propsName="value" 를 넣어 값을 설정  
 
 ```javascript
-var Hello = React.createClass({
-  render() {
-    return (
-      <div>Hello {this.props.name}</div>
-    )
-  }
-});
+import React from 'react';
 
-// <Hello name="React"/>
-// <div>Hello React</div>
+class Header extends React.Component {
+	render() {
+		return(
+			<h1>{ this.props.title }</h1> // App.Header안에 title을 참조
+		);
+	}
+}
+
+class App extends React.Component {
+	render() {
+    return(
+        <div>
+        	<Header title={ this.props.headerTitle } /> {/* Props 객체 참조 */}
+        	<Content title={ this.props.contentTitle }
+        			     body={ this.props.contentBody } />
+        </div>
+    );
+  }
+}
+
+// Props 객체설정
+App.defaultProps = { 
+    headerTitle: 'Default header',
+    contentTitle: 'Default contentTitle',
+    contentBody: 'Default contentBody'
+};
 ```
 
-### 동적으로 갱신
+### Props Types
+
+* Type 검증(Validate)하기
+
+### State - 컴포넌트를 동적으로 갱신
 
 * 유저의 액션이나 Ajax 요청 등으로 값이 동적으로 변화하는 경우는 State를 사용한다. 
 * 특정 this.state.xxx을 갱신할 때는 this.state를 사용해 갱신하는 것이 아니라 반드시 this.setState를 사용해 갱신한다.
 
 ```javascript
-var Counter = React.createClass({
-  getInitialState() {
-    return {
-      count: 0
+class Counter extends React.Component {
+  
+  constructor(props) {
+    super(props);
+    this.state = {
+       count: 2
     };
-  },
+  }
+  
   onClick() {
-    this.setState({count: this.state.count + 1});
-  },
+    this.setState({
+      count: this.state.count + 1
+    });
+  }
+  
   render() {
     return (
       <div>
         <div>count:{this.state.count}</div>
-        <button onClick={this.onClick}>click!</button>
+        <button onClick={this.onClick.bind(this)}>click!</button>
       </div>
     );
   }
-});
+}
 ```
 
-### React.createClass
-
-* React.createClass()는 컴포넌트를 작성할 때 사용하는 함수다.
-
-## Prop
-
-## State
+* state의 초기 값을 설정 할 때는 constructor(생성자) 메소드에서 this.state= { } 를 통하여 설정한다.
+* state를 렌더링 할 때는 { this.state.stateName } 을 사용한다.
+* state를 업데이트 할 때는 this.setState() 메소드를 사용. ES6 class에선 auto binding이 되지 않으므로, setState 메소드를 사용 하게 될 메소드를 bind 해주어야 한다. (bind 하지 않으면 React Component 가 가지고있는 멤버 함수 및 객체에 접근 할 수 없다.)
